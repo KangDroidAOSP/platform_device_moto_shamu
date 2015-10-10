@@ -13,7 +13,7 @@ set -e
 
 function extract() {
     for FILE in `egrep -v '(^#|^$)' $1`; do
-        echo "Extracting /system/$FILE ..."
+        echo "Extracting $FILE ..."
         OLDIFS=$IFS IFS=":" PARSING_ARRAY=($FILE) IFS=$OLDIFS
         FILE=`echo ${PARSING_ARRAY[0]} | sed -e "s/^-//g"`
         DEST=${PARSING_ARRAY[1]}
@@ -26,12 +26,12 @@ function extract() {
         fi
         if [ "$COPY_FROM" = "" ]; then
             # Try destination target first
-            if [ -f /system/$DEST ]; then
-                adb pull /system/$DEST $2/$DEST
+            if [ -f $DEST ]; then
+                adb pull $DEST $2/$DEST
             else
                 # if file does not exist try OEM target
                 if [ "$?" != "0" ]; then
-                    adb pull /system/$FILE $2/$DEST
+                    adb pull $FILE $2/$DEST
                 fi
             fi
         else
